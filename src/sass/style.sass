@@ -1,0 +1,32 @@
+@import "helpers/reset"
+@import "helpers/mixins"
+@import "helpers/variables"
+
+html
+  box-sizing: border-box
+
+*, *::before, *::after
+  box-sizing: inherit
+
+label, button, input, select
+  cursor: pointer
+
+textarea
+  resize: vertical
+
+[disabled]
+  cursor: default
+
+img
+  max-width: 100%
+  height: auto
+
+body
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+  font-size: 100px
+  line-height: 1
+  font-weight: normal
+  color: indigo
+  background-color: #000
+  background: #000 url(../img/happy_cat.jpg)
+  overflow-x: hidden
