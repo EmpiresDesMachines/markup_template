@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 
 module.exports = (env, argv) => ({
   mode: argv.mode,
@@ -73,6 +74,35 @@ module.exports = (env, argv) => ({
             },
           },
         ],
+      }, {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'svg-sprite-loader',
+            options: {
+              extract: true,
+              spriteFilename: './img/sprite.svg',
+            },
+          },
+          {
+            loader: 'svgo-loader',
+            options: {
+              plugins: [
+                { cleanupAttrs: true },
+                { removeEmptyAttrs: true },
+                { removeTitle: true },
+                { removeDesc: true },
+                { removeUselessDefs: true },
+                { removeEmptyContainers: true },
+                { collapseGroups: true },
+                { removeEditorsNSData: true },
+                { removeOffCanvasPaths: true },
+                { removeDimensions: true },
+                { reusePaths: true },
+              ],
+            },
+          },
+        ],
       },
     ],
   },
@@ -80,6 +110,9 @@ module.exports = (env, argv) => ({
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/style.css',
+    }),
+    new SpriteLoaderPlugin({
+      plainSprite: true,
     }),
   ],
   devServer: {
