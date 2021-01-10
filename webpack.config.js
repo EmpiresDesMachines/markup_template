@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -5,6 +6,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const PAGES_DIR = './src/';
+const PAGES = fs.readdirSync(PAGES_DIR).filter(fileName => fileName.endsWith('.pug'));
 
 module.exports = (env, argv) => ({
   mode: argv.mode,
@@ -23,9 +28,6 @@ module.exports = (env, argv) => ({
       new OptimizeCSSAssetsPlugin(),
       new CopyWebpackPlugin({
         patterns: [{
-          from: 'src/*.html',
-          to: '[name].[ext]',
-        }, {
           from: 'src/img/*',
           to: 'img/[name].[ext]',
         }, {
@@ -46,6 +48,10 @@ module.exports = (env, argv) => ({
         use: {
           loader: 'babel-loader',
         },
+      }, {
+        test: /\.pug$/,
+        loader: 'pug-loader',
+        query: { pretty: true },
       }, {
         test: /\.s(a|c)ss$/,
         use: [
@@ -114,6 +120,12 @@ module.exports = (env, argv) => ({
     new SpriteLoaderPlugin({
       plainSprite: true,
     }),
+    ...PAGES.map(page => new HtmlWebpackPlugin({
+      template: './src/' + page,
+      filename: page.replace(/\.pug/, '.html'),
+      inject: false,
+      minify: false,
+    })),
   ],
   devServer: {
     contentBase: [

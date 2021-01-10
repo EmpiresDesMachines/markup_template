@@ -1,0 +1,11 @@
+extends pug/layouts/layout
+
+block variables
+  - var title = 'Index page';
+  - var bodyClass = '';
+
+
+block content
+  h1 HELLO
+  +icon('test', 'additional-class')
+  include pug/partials/example
